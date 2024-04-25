@@ -42,9 +42,6 @@ INSERT INTO Helados (id_helado, sabor, precio, valoracion, alergenos) VALUES
 (2, 'Chocolate', 4.00, 4.2, 'Leche, soja'),
 (3, 'Fresa', 3.80, 4.0, 'Leche, frutas');
 
--- Inserts para la tabla Comentarios (sin cambios)
--- Puedes insertar datos de comentarios aquí si es necesario
-
 -- Inserts para la tabla Pedidos
 INSERT INTO Pedidos (id_pedido, direccion, precio_total, fecha_pedido) VALUES
 (1, 'Calle Principal 123', 15.50, '2024-04-20'),
