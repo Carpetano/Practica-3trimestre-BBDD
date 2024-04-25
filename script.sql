@@ -59,7 +59,7 @@ INSERT INTO Usuarios (mail, contraseña, id_pedido) VALUES
 
 -- Inserts para la tabla Usuarios
 INSERT INTO Comentarios (id_comentario, comentario, id_helado) VALUES
-(1, 'contraseña123', 1),
-(2, 'contraseña123', 3),
-(3, 'contraseña123', 2)
+(1, 'Muy Cremoso', 1),
+(2, 'No es un sabor tipico muy dulce de chocolate, es bastante agradable', 3),
+(3, 'Siempre lo pido con extra de almendras, me encanta', 2)
 
