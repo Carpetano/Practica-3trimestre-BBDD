@@ -125,7 +125,6 @@ VALUES (4, 'Este helado es mi favorito', 1);
 INSERT INTO Pedidos (id_pedido, direccion, precio_total, fecha_pedido)
 VALUES (4, 'Calle del Sol 123', 15.00, '2023-03-25');
 
-
 -- JAVIER | MODIFICACIONES
 
 -- JAVIER | Actualizar el precio de un helado en la tabla Helados:
@@ -150,29 +149,29 @@ WHERE id_pedido = 3;
 
 
 -- ANGEL | INSERCCIONES
-	-- PARA AGREGAR USUARIOS NUEVOS
-		INSERT INTO Usuarios (mail, contraseña, id_pedido) VALUES('wedaulleluso-8198@yopmail.com','u50N9^','4');
+-- PARA AGREGAR USUARIOS NUEVOS
+INSERT INTO Usuarios (mail, contraseña, id_pedido) VALUES('wedaulleluso-8198@yopmail.com','u50N9^','4');
             
-	-- PARA AGREGAR SABORES NUEVOS
-		INSERT INTO Helados (id_helado, sabor, precio, valoracion, alergenos) VALUES('4', 'Chocolate', '5.50', '4.0', 'Lacteos, Nueces');
+-- PARA AGREGAR SABORES NUEVOS
+INSERT INTO Helados (id_helado, sabor, precio, valoracion, alergenos) VALUES('4', 'Chocolate', '5.50', '4.0', 'Lacteos, Nueces');
             
 -- ANGEL | MODIFICACION
-	-- MODIFICAR LA TABLA USUARIOS PARA AGREGAR LA FECHA DE CUMPLEAÑOS DEL USUARIO
-		ALTER TABLE Usuarios ADD fechaCumpleaños DATE;
+-- MODIFICAR LA TABLA USUARIOS PARA AGREGAR LA FECHA DE CUMPLEAÑOS DEL USUARIO
+ALTER TABLE Usuarios ADD fechaCumpleaños DATE;
             
-    -- MODIFICAR LA TABLA HELADOS PARA AGREGAR UN PORCENTAJE DE DESCUENTO EN EL PRECIO
-		ALTER TABLE Helados ADD descuento DECIMAL (3,2);
+-- MODIFICAR LA TABLA HELADOS PARA AGREGAR UN PORCENTAJE DE DESCUENTO EN EL PRECIO
+ALTER TABLE Helados ADD descuento DECIMAL (3,2);
     
 -- ANGEL | ELIMINACION
-	-- ELIMINANDO EL SABOR DE HELADO QUE ES MENOS SOLICITADO
-		DELETE FROM Helados WHERE id_helado = (
-												SELECT id_helado
-												FROM helados
-												WHERE valoracion < 1.50
-		);
+-- ELIMINANDO EL SABOR DE HELADO QUE ES MENOS SOLICITADO
+DELETE FROM Helados WHERE id_helado = (
+	SELECT id_helado
+	FROM helados
+	WHERE valoracion < 1.50
+);
             
-	-- ELIMINANDO LA COLUMNA DESCUENTO, YA QUE NO ESTARÁ HABILITADA SIEMPRE
-        ALTER TABLE helados DROP COLUMN descuento;
+-- ELIMINANDO LA COLUMNA DESCUENTO, YA QUE NO ESTARÁ HABILITADA SIEMPRE
+ALTER TABLE helados DROP COLUMN descuento;
 
 -- 4. Imaginaros que vienen dos personas nuevas a vuestra empresa, os ayudarán a mejorar aspectos de la aplicación 
 -- ¿Qué vistas le proporcionaríais teniendo en cuenta las funciones que van a desarrollar (define también qué función desarrollarán)? 
@@ -193,18 +192,20 @@ INNER JOIN Helados h ON c.id_helado = h.id_helado;
 
 
 -- ANGEL | ENCARGADA DE MOSTRAR LA INFORMACION DE LOS HELADOS QUE PEOR VALORACION TIENEN
-		CREATE VIEW heladosMenosRequeridos AS 
-				SELECT * FROM HELADOS WHERE valoracion < 1.50;
+CREATE VIEW heladosMenosRequeridos AS 
+SELECT * FROM HELADOS WHERE valoracion < 1.50;
     
 -- ANGEL | ENCARGADA DE MOSTRAR LA DIRECCION A LA CUAL DEBERÁ DE SER ENTREGADA EL PEDIDO MAS RECIENTE
-		CREATE VIEW direccionPedidoReciente AS
-				SELECT id_pedido, direccion
-                FROM pedidos
-                ORDER BY id_pedido DESC 
-                LIMIT 1
+CREATE VIEW direccionPedidoReciente AS
+SELECT id_pedido, direccion
+FROM pedidos
+ORDER BY id_pedido DESC 
+LIMIT 1
 
 -- 5. Define qué usuarios crearías para que puedan acceder al SGBD y qué permisos tendrán.
 
+
+	
 -- JAVIER | Administrador del SGBD:
 – CREAR USUARIO PARA EL ADMIN Y PERMISOS DE TODO
 CREATE USER admin@'localhost' IDENTIFIED BY 'password';
@@ -215,19 +216,35 @@ GRANT ALL PRIVILEGES ON *.* TO admin@'localhost';
 CREATE USER analyst@'localhost' IDENTIFIED BY 'password';
 GRANT SELECT ON iceAndChill.* TO analyst@'localhost'
 
+
+	
     
 -- ANGEL | CREAR USUARIO PARA EL REPARTIDOR
-		CREATE USER rep01 IDENTIFIED BY 'repartidor1';
-        GRANT ALL PRIVILEGES ON pedidos TO 'repartidor1'@'localhost';
+CREATE USER rep01 IDENTIFIED BY 'repartidor1';
+GRANT ALL PRIVILEGES ON pedidos TO 'repartidor1'@'localhost';
         
 -- ANGEL | CREAR USUARIO PARA EL HELADERO
-		CREATE USER hld01 IDENTIFIED BY 'heladero1';
-        GRANT ALL PRIVILEGES ON helados TO 'heladero1'@'localhost';
-        GRANT ALL PRIVILEGES ON usuarios TO 'heladero1'@'localhost';
+CREATE USER hld01 IDENTIFIED BY 'heladero1';
+GRANT ALL PRIVILEGES ON helados TO 'heladero1'@'localhost';
+GRANT ALL PRIVILEGES ON usuarios TO 'heladero1'@'localhost';
+
+
+
+
+-- Mario | Añadir usuario admin 
+CREATE USER 'admin'@'localhost' IDENTIFIED BY '¿myStrongAdminP@sswordÑ';
+GRANT ALL PRIVILEGES ON iceAndChill.* TO 'admin'@'localhost';
+
+-- Mario | Crear un usario guest
+CREATE USER 'invitado'@'localhost' IDENTIFIED BY '1234';
+GRANT SELECT ON iceAndChill.* TO 'invitado'@'localhost';
+
 
 
 -- 6. ¿Has detectado alguna consulta que se realiza constantemente? ¿echas de menos algún índice? por ejemplo, 
 -- si se busca siempre información por ciudad sería recomendable crear un índice en el campo ciudad.
+
+
 
 -- JAVIER | CREAR INDICE PARA LAS VALORACIONES DE LOS HELADOS
 CREATE INDEX idx_valoracion ON Helados (valoracion);
@@ -235,11 +252,22 @@ CREATE INDEX idx_valoracion ON Helados (valoracion);
 -- JAVIER | CREAR INDICE PARA LAS FECHAS DE PEDIDOS
 CREATE INDEX idx_fecha_pedido ON Pedidos (fecha_pedido);
 
+
+
 -- ANGEL | CREAR INDICE PARA LOS SABORES DE HELADO
-		CREATE INDEX indx_helados ON Helados(sabor);
+CREATE INDEX indx_helados ON Helados(sabor);
         
 -- ANGEL | CREAR INDICE PARA LOS PEDIDOS QUE SE TIENEN QUE ENVIAR
-		CREATE INDEX indx_pedidos ON Pedidos(id_pedido);
+CREATE INDEX indx_pedidos ON Pedidos(id_pedido);
+
+
+
+-- Mario | Crear índice para los precio 
+CREATE INDEX idx_sabor ON Helados(precio);
+
+-- Mario | Crear índice para las id_ de los comentarios
+CREATE INDEX idx_id_comentario ON Comentarios(id_comentario);
+
 
 
 -- 7. ¿Qué triggers pensáis que necesita la base de datos?, crea 2 trigger por tabla.
@@ -254,7 +282,6 @@ BEGIN
 END;//
 DELIMITER;
 
-
 -- JAVIER | TRIGGER PARA ACTUALIZAR PRECIO TOTAL
 DELIMITER //
 CREATE TRIGGER precioTotal_act
@@ -265,28 +292,60 @@ BEGIN
 END;//
 DELIMITER;
 
+
+
 -- ANGEL | ELIMINAR HELADOS CON MENOS DE 2 DE VALORACION POR CADA ACTUALIZACION DE LA TABLA HELADOS
-		DELIMITER //
-		CREATE TRIGGER eliminarHelados
-        BEFORE UPDATE ON helados
-        FOR EACH ROW
-        BEGIN
-			IF NEW.valoracion < 2 THEN
-				DELETE FROM helados;
-			END IF;
-        END; //
+DELIMITER //
+CREATE TRIGGER eliminarHelados
+BEFORE UPDATE ON helados
+FOR EACH ROW
+BEGIN
+	IF NEW.valoracion < 2 THEN
+		DELETE FROM helados;
+	END IF;
+END; //
 		
 -- ANGEL | INSERTAR COMENTARIOS POR CADA PEDIDO REALIZADO
-		DELIMITER //
-		CREATE TRIGGER comentarioPedido
-        BEFORE INSERT ON pedido
-        FOR EACH ROW
-        BEGIN
-			INSERT INTO Comentario (id_comentario, comentario, id_helado) VALUES (NEW.id_comentario, 'texto comentario ...', NEW.id_helado);
-        END; //
+DELIMITER //
+CREATE TRIGGER comentarioPedido
+BEFORE INSERT ON pedido
+FOR EACH ROW
+BEGIN
+	INSERT INTO Comentario (id_comentario, comentario, id_helado) VALUES (NEW.id_comentario, 'texto comentario ...', NEW.id_helado);
+END; //
+
+
+	
+-- Mario | Trigger para actualizar la puntuacion de cara helado
+-- se tendria que modificar la tabla de comentarios y añadir valoracion en cada comentario
+CREATE TRIGGER update_valoracion
+AFTER INSERT ON Comentarios
+FOR EACH ROW
+BEGIN
+    UPDATE Helados
+    SET valoracion = (
+        SELECT AVG(valoracion)
+        FROM Comentarios
+        WHERE id_helado = NEW.id_helado
+    )
+    WHERE id_helado = NEW.id_helado;
+END;
+
+
+--  Mario | Comprobar que la valoracion es entre 0 y 5
+CREATE TRIGGER check_valoracion
+BEFORE INSERT ON Comentarios
+FOR EACH ROW
+BEGIN
+    IF NEW.valoracion < 0 OR NEW.valoracion > 5 THEN
+        SET NEW.valoracion = 0; -- Set a default value
+    END IF;
+END;
+
 
 
 -- 8. ¿Qué procedimientos almacenados podría necesitar la base de datos?, crea 2 procedimientos almacenados.
+
 
 -- JAVIER | Procedimiento almacenado para agregar un nuevo helado a la tabla Helados:
 DELIMITER //
@@ -312,22 +371,52 @@ END; //
 DELIMITER;
 
 
+
 -- ANGEL | PROCEDIMIENTO CREADO PARA ENCONTRAR LOS PEDIDOS MAS CERCANOS:
-		DELIMITER //
-			CREATE PROCEDURE mostrarPedidosEnUbicacion()
-            BEGIN
-				SELECT *
-                FROM pedidos
+DELIMITER //
+CREATE PROCEDURE mostrarPedidosEnUbicacion()
+BEGIN
+	SELECT *
+        FROM pedidos
                 WHERE direccion LIKE ('*Lugar en donde se encuentra nuestra heladeria*');
-            END; //
+END; //
         
 -- ANGEL | PROCEDIMIENTO PARA MOSTRAR LOS USUARIOS CON MAS PEDIDOS
-		DELIMITER //
-				CREATE PROCEDURE mostrarUsuariosConMasPedidos()
-				BEGIN
-					SELECT u.mail, p.id_pedido
-					FROM usuarios u
-					INNER JOIN pedidos p ON u.id_pedido = p.id_pedido
-                    GROUP BY u.id_pedido
-                    HAVING COUNT(u.id_pedido) > 1;
-				END; //
+DELIMITER //
+CREATE PROCEDURE mostrarUsuariosConMasPedidos()
+BEGIN
+	SELECT u.mail, p.id_pedido
+	FROM usuarios u
+	INNER JOIN pedidos p ON u.id_pedido = p.id_pedido
+        GROUP BY u.id_pedido
+        HAVING COUNT(u.id_pedido) > 1;
+END; //
+
+
+	
+-- Mario | Insertar comentario a la BD
+DELIMITER //
+
+CREATE PROCEDURE InsertarComentario(
+    IN comentario_texto VARCHAR(255),
+    IN helado_id TINYINT
+)
+BEGIN
+    INSERT INTO Comentarios (comentario, id_helado)
+    VALUES (comentario_texto, helado_id);
+END//
+
+DELIMITER ;
+
+
+-- Mario | Mostrar los comentarios de el sabor especificado
+CREATE PROCEDURE mostrarComentarioSabor(
+    IN flavor VARCHAR(20)
+)
+BEGIN
+	
+    SELECT comentario, valoracion
+    FROM Comentarios c
+    INNER JOIN Helados h ON c.id_helado = h.id_helado
+    WHERE h.sabor = flavor;
+END;
